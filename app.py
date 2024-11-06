@@ -22,13 +22,13 @@ PROFILE = "vej-book"
 DATABASE = "vtnlake_dev_curated_finance" 
 SQLITE_PATH = rf'E:\Work\TradeSquare\SQlite Test\vtnlake_onedrive.db'
 
-date_filter = athena_query(PROFILE, DATABASE,"""
-    select 
-        min(date_format(parse_datetime(_file_updated_date,'yyyy-MM-dd''T''HH:mm:ss''Z'),'%Y-%m-%d %H:%i:%s')) AS min_date,
-        max(date_format(parse_datetime(_file_updated_date,'yyyy-MM-dd''T''HH:mm:ss''Z'),'%Y-%m-%d %H:%i:%s')) AS max_date
+# date_filter = athena_query(PROFILE, DATABASE,"""
+#     select 
+#         min(date_format(parse_datetime(_file_updated_date,'yyyy-MM-dd''T''HH:mm:ss''Z'),'%Y-%m-%d %H:%i:%s')) AS min_date,
+#         max(date_format(parse_datetime(_file_updated_date,'yyyy-MM-dd''T''HH:mm:ss''Z'),'%Y-%m-%d %H:%i:%s')) AS max_date
         
-    from onward
-""")
+#     from onward
+# """)
 
 # df_date_filter = pd.DataFrame(date_filter, columns = date_filter.columns)
 # min_date = df_date_filter.iloc[0, 0]
