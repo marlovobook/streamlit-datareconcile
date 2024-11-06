@@ -58,7 +58,47 @@ select_onward_sqlite = df_select_sqlite
 select_onward_sqlite.sort_values(by=['order_item_id_sqlite', 'order_item_sub_id_sqlite', 'bill_doc_no_sqlite', 'package_code_sqlite'], inplace=True)
 select_onward_sqlite.reset_index(drop=True, inplace=True)
 
+def configure_page() -> None:
+    st.set_page_config(
+        page_title="TradeSquare",
+        page_icon=":moneybag:",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+
+def configure_overview() -> None:
+    st.title("TradeSquare")
+    st.markdown(
+        """
+        This app is for TradeSquare
+        """
+    )  
+def configure_sidebar() -> None:
+    seed = st.sidebar.text_input("Seed", "42")
+    width = st.sidebar.slider("Width", 100, 1000, 300)
+    height = st.sidebar.slider("Height", 100, 1000, 300)
+    num_rooms = st.sidebar.slider("Number of rooms", 1, 10, 3)
+    room_size_range = st.sidebar.slider("Room size range", 10, 100, (25, 75))
+    return seed, width, height, num_rooms, room_size_range
 
 
-select_onward_sqlite
 
+
+# def configure_avaliable_algo_heuristics() -> None:
+#     st.header("Avaliable Algo Heuristics")
+#     st.write(select_onward_sqlite) 
+
+def configure_data() -> None:
+    st.header("Data")
+    st.write(select_onward_sqlite)
+
+# select_onward_sqlite
+
+def main() -> None:
+    configure_page()
+    configure_overview()
+    configure_data()
+
+
+if __name__ == "__main__":
+    main()
