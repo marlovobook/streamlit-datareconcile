@@ -58,6 +58,35 @@ select_onward_sqlite = df_select_sqlite
 select_onward_sqlite.sort_values(by=['order_item_id_sqlite', 'order_item_sub_id_sqlite', 'bill_doc_no_sqlite', 'package_code_sqlite'], inplace=True)
 select_onward_sqlite.reset_index(drop=True, inplace=True)
 
+
+# Descibe Statics
+stat_onward_sqlite =  pd.DataFrame(select_onward_sqlite.describe(include='all'))
+
+
+# Convert all string values to hashed integers in a copy of the DataFrame
+hashed_df = select_onward_sqlite.apply(lambda col: col.map(lambda x: hash(x) if isinstance(x, str) else x))
+
+
+# Calculate the sum of each column and convert to a DataFrame row
+sum_onward_sqlite = hashed_df.sum().to_frame().T
+sum_onward_sqlite.index = ["sum_hashed"] 
+
+
+avg_onward_sqlite = hashed_df.mean().to_frame().T
+avg_onward_sqlite.index = ["avg_hashed"]
+
+
+min_onward_sqlite = hashed_df.min().to_frame().T
+min_onward_sqlite.index = ["min_hashed"]
+
+
+max_onward_sqlite = hashed_df.max().to_frame().T
+max_onward_sqlite.index = ["max_hashed"]
+
+# Concatenate the statistics DataFrames
+stat_select_onward_sqlite = pd.concat([stat_onward_sqlite, sum_onward_sqlite, avg_onward_sqlite, min_onward_sqlite, max_onward_sqlite], axis=0)
+
+
 def configure_page() -> None:
     st.set_page_config(
         page_title="TradeSquare",
@@ -89,16 +118,26 @@ def configure_sidebar() -> None:
 #     st.write(select_onward_sqlite) 
 
 def configure_data() -> None:
-    st.header("Data")
-    st.write(select_onward_sqlite)
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.header("Data")
+        st.write(select_onward_sqlite)
+    with col2:
+        st.header("Statistics")
+        st.write(stat_select_onward_sqlite)
+    with col3:
+        st.header("Data")
+        st.table(stat_select_onward_sqlite)
 
-# select_onward_sqlite
+
+
+
 
 def main() -> None:
     configure_page()
     configure_overview()
     configure_data()
-
+    configure_sidebar()
 
 if __name__ == "__main__":
     main()
